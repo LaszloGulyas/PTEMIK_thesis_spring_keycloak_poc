@@ -23,12 +23,12 @@ public class SpringSecurityConfig {
         http
                 .cors().and()
                 .csrf().disable()
-                .authorizeRequests()
+                .authorizeHttpRequests()
 
-                .antMatchers(HttpMethod.GET, "/actuator/health").permitAll()
+                .requestMatchers(HttpMethod.GET, "/actuator/health").permitAll()
 
-                .antMatchers(HttpMethod.POST, "/api/user/register").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/user/login").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/user/register").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/user/login").permitAll()
 
                 .anyRequest().denyAll()
                 .and().logout().logoutUrl("/api/user/logout").deleteCookies("JSESSIONID")
