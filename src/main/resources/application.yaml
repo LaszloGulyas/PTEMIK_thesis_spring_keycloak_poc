@@ -1,2 +1,19 @@
 server:
   port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/springapp
+    username: springapp
+    password: springapp
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+logging:
+  level:
+    org:
+      hibernate: info
+      springframework:
+        security: debug
+        web: debug
