@@ -1,13 +1,57 @@
 package com.tm7xco.springkeycloakpoc.service;
 
+import com.tm7xco.springkeycloakpoc.controller.dto.LoginRequest;
+import com.tm7xco.springkeycloakpoc.controller.dto.RegisterRequest;
+import com.tm7xco.springkeycloakpoc.domain.AppUser;
+import com.tm7xco.springkeycloakpoc.repository.UserRepository;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 
 @Service
+@Transactional
 @Slf4j
+@RequiredArgsConstructor
 public class UserService {
 
+    private final UserRepository userRepository;
 
+    public AppUser registerUser(RegisterRequest registerRequest) {
+        if (isUsernameExist(registerRequest.getUsername())) {
+            log.info("User not created: username is already existing!");
+            return null;
+        }
+
+        log.info("Creating new user and calendar started...");
+        AppUser user = AppUser.builder()
+                .username(registerRequest.getUsername())
+                .password(registerRequest.getPassword())
+                .email(registerRequest.getEmail())
+                .build();
+
+        AppUser savedUser = userRepository.save(user);
+        log.info("User created and saved in database!");
+
+        return savedUser;
+    }
+
+    public AppUser loginUser(LoginRequest loginRequest) {
+        log.info("User authentication is started...");
+
+        AppUser user = userRepository.findByUsername(loginRequest.getUsername());
+        AppUser authenticatedUser = null;
+        if (user != null && user.getPassword().equals(loginRequest.getPassword())) {
+            authenticatedUser = user;
+        }
+
+        log.info("User authentication is finished!");
+        return authenticatedUser;
+    }
+
+    private boolean isUsernameExist(String username) {
+        return userRepository.findByUsername(username) != null;
+    }
 
 }

@@ -17,5 +17,5 @@ logging:
     org:
       hibernate: info
       springframework:
-        security: debug
-        web: debug
+        security: info
+        web: info

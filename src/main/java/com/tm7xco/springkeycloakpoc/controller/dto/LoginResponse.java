@@ -6,7 +6,8 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public class ResponseLogin {
+public class LoginResponse {
 
+    private final String username;
 
 }

@@ -1,14 +1,16 @@
 package com.tm7xco.springkeycloakpoc.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Setter;
+import lombok.*;
 
 
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class AppUser {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
