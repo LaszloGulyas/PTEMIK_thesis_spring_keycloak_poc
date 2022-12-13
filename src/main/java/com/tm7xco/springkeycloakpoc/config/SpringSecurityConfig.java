@@ -30,6 +30,8 @@ public class SpringSecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/user/register").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/user/login").permitAll()
 
+                .requestMatchers(HttpMethod.GET, "/api/business/execute").authenticated()
+
                 .anyRequest().denyAll()
                 .and().logout().logoutUrl("/api/user/logout").deleteCookies("JSESSIONID")
                 .and().httpBasic();

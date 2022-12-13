@@ -7,6 +7,7 @@ import com.tm7xco.springkeycloakpoc.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder bCryptEncoder;
 
     public AppUser registerUser(RegisterRequest registerRequest) {
         if (isUsernameExist(registerRequest.getUsername())) {
@@ -27,7 +29,7 @@ public class UserService {
         log.info("Creating new user and calendar started...");
         AppUser user = AppUser.builder()
                 .username(registerRequest.getUsername())
-                .password(registerRequest.getPassword())
+                .password(bCryptEncoder.encode(registerRequest.getPassword()))
                 .email(registerRequest.getEmail())
                 .build();
 
@@ -42,7 +44,7 @@ public class UserService {
 
         AppUser user = userRepository.findByUsername(loginRequest.getUsername());
         AppUser authenticatedUser = null;
-        if (user != null && user.getPassword().equals(loginRequest.getPassword())) {
+        if (user != null && bCryptEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             authenticatedUser = user;
         }
 
