@@ -15,7 +15,7 @@ public class BusinessController {
     private final BusinessService businessService;
 
     @GetMapping("/execute")
-    public ResponseEntity<Void> register() {
+    public ResponseEntity<Void> execute() {
         log.info("Processing incoming GET request (/api/business/execute) started...");
 
         businessService.restrictedBusinessFunction();

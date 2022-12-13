@@ -26,7 +26,7 @@ public class UserService {
             return null;
         }
 
-        log.info("Creating new user and calendar started...");
+        log.info("Creating new user started...");
         AppUser user = AppUser.builder()
                 .username(registerRequest.getUsername())
                 .password(bCryptEncoder.encode(registerRequest.getPassword()))
