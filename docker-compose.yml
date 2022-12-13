@@ -1,18 +1,19 @@
 version: '4.12'
 
 volumes:
-  postgres_data:
+  postgres-data:
     driver: local
 
 services:
   postgres:
-    image: postgres
+    build: docker/postgres/.
+    image: spring-keycloak-poc-postgres
+    container_name: postgres-14.0
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
     environment:
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: keycloak
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
     ports:
       - "5432:5432"
   keycloak:
