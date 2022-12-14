@@ -41,17 +41,8 @@ public class UserController {
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest login) {
         log.info("Processing incoming POST request (/api/user/login) started...");
 
-        AppUser authenticatedUser = userService.loginUser(login);
-
-        LoginResponse response;
-        HttpStatus responseStatus;
-        if (authenticatedUser != null) {
-            response = new LoginResponse(authenticatedUser.getUsername());
-            responseStatus = HttpStatus.OK;
-        } else {
-            response = new LoginResponse(null);
-            responseStatus = HttpStatus.UNAUTHORIZED;
-        }
+        LoginResponse response = userService.loginUser(login);
+        HttpStatus responseStatus = response == null ? HttpStatus.UNAUTHORIZED : HttpStatus.OK;
 
         log.info("Processing incoming POST request (/api/user/login) finished!");
         return ResponseEntity.status(responseStatus).body(response);

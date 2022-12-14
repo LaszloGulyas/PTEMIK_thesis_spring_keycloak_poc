@@ -20,4 +20,10 @@ public class KeycloakApiConfig {
     @Value("${spring-keycloak-poc.keycloak.admin.client-id}")
     private String adminClientId;
 
+    @Value("${spring-keycloak-poc.keycloak.user.client-id}")
+    private String userClientId;
+
+    @Value("${spring-keycloak-poc.keycloak.user.realm}")
+    private String userRealm;
+
 }

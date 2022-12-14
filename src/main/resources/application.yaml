@@ -33,3 +33,6 @@ spring-keycloak-poc:
       username: admin
       password: admin
       client-id: admin-cli
+    user:
+      client-id: springapp
+      realm: SpringKeycloakPoc

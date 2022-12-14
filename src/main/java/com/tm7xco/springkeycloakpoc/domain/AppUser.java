@@ -21,9 +21,6 @@ public class AppUser {
     @Column(name = "user_name", unique = true)
     private String username;
 
-    @Column(name = "user_password")
-    private String password;
-
     @Column(name = "user_email")
     private String email;
 

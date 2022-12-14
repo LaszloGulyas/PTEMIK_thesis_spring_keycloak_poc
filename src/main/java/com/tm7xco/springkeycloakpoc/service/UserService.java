@@ -1,6 +1,7 @@
 package com.tm7xco.springkeycloakpoc.service;
 
 import com.tm7xco.springkeycloakpoc.controller.dto.LoginRequest;
+import com.tm7xco.springkeycloakpoc.controller.dto.LoginResponse;
 import com.tm7xco.springkeycloakpoc.controller.dto.RegisterRequest;
 import com.tm7xco.springkeycloakpoc.domain.AppUser;
 import com.tm7xco.springkeycloakpoc.keycloak.KeycloakService;
@@ -8,7 +9,6 @@ import com.tm7xco.springkeycloakpoc.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder bCryptEncoder;
     private final KeycloakService keycloakService;
 
     public AppUser registerUser(RegisterRequest registerRequest) {
@@ -36,7 +35,6 @@ public class UserService {
         log.info("Creating new user started...");
         AppUser user = AppUser.builder()
                 .username(registerRequest.getUsername())
-                .password(bCryptEncoder.encode(registerRequest.getPassword()))
                 .email(registerRequest.getEmail())
                 .build();
 
@@ -46,17 +44,27 @@ public class UserService {
         return savedUser;
     }
 
-    public AppUser loginUser(LoginRequest loginRequest) {
+    public LoginResponse loginUser(LoginRequest loginRequest) {
         log.info("User authentication is started...");
+        LoginResponse loginResponse = null;
 
         AppUser user = userRepository.findByUsername(loginRequest.getUsername());
-        AppUser authenticatedUser = null;
-        if (user != null && bCryptEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            authenticatedUser = user;
+
+        if (user == null) {
+            log.info("Username not existing in database!");
+            return null;
         }
 
-        log.info("User authentication is finished!");
-        return authenticatedUser;
+        String token = keycloakService.getUserBearerToken(user.getUsername(), loginRequest.getPassword());
+
+        if (token != null) {
+            loginResponse = new LoginResponse(user.getUsername(), token);
+            log.info("User authenticated successfully!");
+        } else {
+            log.info("User authentication with Keycloak failed!");
+        }
+
+        return loginResponse;
     }
 
     private boolean isUsernameExist(String username) {

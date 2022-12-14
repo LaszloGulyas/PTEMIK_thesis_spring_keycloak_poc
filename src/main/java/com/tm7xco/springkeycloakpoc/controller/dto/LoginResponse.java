@@ -9,5 +9,6 @@ import lombok.RequiredArgsConstructor;
 public class LoginResponse {
 
     private final String username;
+    private final String token;
 
 }

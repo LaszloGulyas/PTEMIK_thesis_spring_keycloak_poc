@@ -23,10 +23,9 @@ public class KeycloakApi {
     private final RestTemplate restTemplate;
     private final KeycloakApiConfig keycloakApiConfig;
 
-    public ResponseEntity<KeycloakTokenResponse> getBearerTokenByPassword(String username, String password, String clientId) {
+    public ResponseEntity<KeycloakTokenResponse> getBearerTokenByPassword(String url, String username, String password, String clientId) {
         log.info("Preparing rest-call to Keycloak: getBearerTokenByPassword");
 
-        String url = keycloakApiConfig.getUrl() + "/realms/master/protocol/openid-connect/token";
         HttpMethod method = HttpMethod.POST;
 
         HttpHeaders headers = new HttpHeaders();
