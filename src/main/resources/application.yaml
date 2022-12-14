@@ -25,3 +25,11 @@ logging:
       springframework:
         security: info
         web: info
+
+spring-keycloak-poc:
+  keycloak:
+    url: http://localhost:8081
+    admin:
+      username: admin
+      password: admin
+      client-id: admin-cli

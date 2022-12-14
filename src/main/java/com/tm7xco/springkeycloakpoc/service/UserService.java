@@ -3,6 +3,7 @@ package com.tm7xco.springkeycloakpoc.service;
 import com.tm7xco.springkeycloakpoc.controller.dto.LoginRequest;
 import com.tm7xco.springkeycloakpoc.controller.dto.RegisterRequest;
 import com.tm7xco.springkeycloakpoc.domain.AppUser;
+import com.tm7xco.springkeycloakpoc.keycloak.KeycloakService;
 import com.tm7xco.springkeycloakpoc.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +20,16 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder bCryptEncoder;
+    private final KeycloakService keycloakService;
 
     public AppUser registerUser(RegisterRequest registerRequest) {
         if (isUsernameExist(registerRequest.getUsername())) {
             log.info("User not created: username is already existing!");
+            return null;
+        }
+
+        if (!keycloakService.createKeycloakUser(registerRequest.getUsername(), registerRequest.getPassword(), true)) {
+            log.error("User not created: error during creating user in Keycloak");
             return null;
         }
 
@@ -34,7 +41,7 @@ public class UserService {
                 .build();
 
         AppUser savedUser = userRepository.save(user);
-        log.info("User created and saved in database!");
+        log.info("User created and saved in database and keycloak!");
 
         return savedUser;
     }
