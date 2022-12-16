@@ -20,6 +20,8 @@ services:
     image: quay.io/keycloak/keycloak:19.0.2
     container_name: keycloak-19.0.2
     hostname: keycloak
+    volumes:
+      - ./docker/keycloak/import:/opt/keycloak/data/import
     environment:
       KC_HEALTH_ENABLED: true
       KC_METRICS_ENABLED: true
@@ -34,6 +36,7 @@ services:
       - "8081:8081"
     command:
       - "start-dev"
+      - "--import-realm"
       - "--http-port=8081"
     depends_on:
       - postgres
