@@ -3,8 +3,6 @@ version: '4.12'
 volumes:
   postgres-data:
     driver: local
-  springapp-data:
-    driver: local
 
 services:
   postgres:
@@ -23,7 +21,7 @@ services:
     container_name: keycloak-19.0.2
     hostname: keycloak
     volumes:
-      - ./docker/keycloak/import/project:/opt/keycloak/data/import
+      - ./docker/keycloak/import/local:/opt/keycloak/data/import
     environment:
       KC_HEALTH_ENABLED: true
       KC_METRICS_ENABLED: true
@@ -42,14 +40,3 @@ services:
       - "--http-port=8081"
     depends_on:
       - postgres
-  springapp:
-    build: .
-    image: spring-keycloak-poc-springapp
-    container_name: springapp-0.0.1
-    volumes:
-      - springapp-data:/var/lib/springapp/data
-    ports:
-      - "8080:8080"
-    depends_on:
-      - postgres
-      - keycloak

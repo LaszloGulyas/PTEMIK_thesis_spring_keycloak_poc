@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/springapp
+    username: springapp
+    password: springapp
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081/realms/SpringKeycloakPoc
+          jwk-set-uri: http://localhost:8081/realms/SpringKeycloakPoc/protocol/openid-connect/certs
+
+spring-keycloak-poc:
+  keycloak:
+    url: http://localhost:8081
