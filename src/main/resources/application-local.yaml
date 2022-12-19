@@ -3,6 +3,9 @@ spring:
     url: jdbc:postgresql://localhost:5432/springapp
     username: springapp
     password: springapp
+  jpa:
+    hibernate:
+      ddl-auto: update
   security:
     oauth2:
       resourceserver:
