@@ -9,6 +9,7 @@ import com.tm7xco.springkeycloakpoc.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 
@@ -65,6 +66,33 @@ public class UserService {
         }
 
         return loginResponse;
+    }
+
+    public boolean deleteUser() {
+        log.info("User deletion is started...");
+
+        String authenticatedUserId = SecurityContextHolder.getContext().getAuthentication().getName();
+        String deletedUserName = keycloakService.deleteKeycloakUser(authenticatedUserId);
+
+        if (deletedUserName == null) {
+            log.info("User deletion from Keycloak failed!");
+            return false;
+        }
+
+        Integer deletedAppUser = null;
+        try {
+             deletedAppUser = userRepository.deleteAppUserByUsername(deletedUserName);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+
+        if (deletedAppUser == null) {
+            log.info("User deletion from database failed!");
+            return false;
+        }
+
+        log.info("User deleted successfully!");
+        return true;
     }
 
     private boolean isUsernameExist(String username) {

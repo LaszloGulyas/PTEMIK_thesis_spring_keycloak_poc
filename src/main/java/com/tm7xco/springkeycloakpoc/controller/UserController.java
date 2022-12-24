@@ -10,10 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -46,6 +43,23 @@ public class UserController {
 
         log.info("Processing incoming POST request (/api/user/login) finished!");
         return ResponseEntity.status(responseStatus).body(response);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteUser() {
+        log.info("Processing incoming DELETE request (/api/user/) started...");
+
+        boolean isUserDeleted = userService.deleteUser();
+
+        ResponseEntity<Void> response;
+        if (isUserDeleted) {
+            response = ResponseEntity.ok().build();
+        } else {
+            response = ResponseEntity.notFound().build();
+        }
+
+        log.info("Processing incoming DELETE request (/api/user/) finished!");
+        return response;
     }
 
 }
