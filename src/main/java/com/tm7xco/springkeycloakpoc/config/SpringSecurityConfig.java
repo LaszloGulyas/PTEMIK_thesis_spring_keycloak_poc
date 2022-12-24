@@ -3,6 +3,7 @@ package com.tm7xco.springkeycloakpoc.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
@@ -24,7 +25,9 @@ public class SpringSecurityConfig {
                 .csrf().disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/actuator/health").permitAll()
-                .requestMatchers("/api/user/*").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/user/login").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/user/register").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/api/user").authenticated()
                 .requestMatchers("/api/business/*").authenticated()
                 .anyRequest().denyAll().and()
                 .oauth2ResourceServer()
