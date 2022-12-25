@@ -3,6 +3,7 @@ package com.tm7xco.springkeycloakpoc.service;
 import com.tm7xco.springkeycloakpoc.controller.dto.LoginRequest;
 import com.tm7xco.springkeycloakpoc.controller.dto.LoginResponse;
 import com.tm7xco.springkeycloakpoc.controller.dto.RegisterRequest;
+import com.tm7xco.springkeycloakpoc.controller.dto.UpdatePasswordRequest;
 import com.tm7xco.springkeycloakpoc.domain.AppUser;
 import com.tm7xco.springkeycloakpoc.keycloak.KeycloakService;
 import com.tm7xco.springkeycloakpoc.repository.UserRepository;
@@ -93,6 +94,23 @@ public class UserService {
 
         log.info("User deleted successfully!");
         return true;
+    }
+
+    public boolean updateUserPassword(UpdatePasswordRequest passwordRequest) {
+        log.info("Updating user password is started...");
+
+        String authenticatedUserId = SecurityContextHolder.getContext().getAuthentication().getName();
+        boolean isUserPasswordUpdated = keycloakService.updateUserPassword(
+                authenticatedUserId,
+                passwordRequest.getPassword());
+
+        if (isUserPasswordUpdated) {
+            log.info("User password updated successfully!");
+        } else {
+            log.info("User password updating failed!");
+        }
+
+        return isUserPasswordUpdated;
     }
 
     private boolean isUsernameExist(String username) {

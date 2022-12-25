@@ -1,9 +1,6 @@
 package com.tm7xco.springkeycloakpoc.controller;
 
-import com.tm7xco.springkeycloakpoc.controller.dto.LoginRequest;
-import com.tm7xco.springkeycloakpoc.controller.dto.RegisterRequest;
-import com.tm7xco.springkeycloakpoc.controller.dto.LoginResponse;
-import com.tm7xco.springkeycloakpoc.controller.dto.RegisterResponse;
+import com.tm7xco.springkeycloakpoc.controller.dto.*;
 import com.tm7xco.springkeycloakpoc.domain.AppUser;
 import com.tm7xco.springkeycloakpoc.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -59,6 +56,23 @@ public class UserController {
         }
 
         log.info("Processing incoming DELETE request (/api/user/) finished!");
+        return response;
+    }
+
+    @PutMapping("/update-password")
+    public ResponseEntity<Void> updatePassword(@RequestBody UpdatePasswordRequest updatePasswordRequest) {
+        log.info("Processing incoming PUT request (/api/user/update-password) started...");
+
+        boolean isPasswordUpdated = userService.updateUserPassword(updatePasswordRequest);
+
+        ResponseEntity<Void> response;
+        if (isPasswordUpdated) {
+            response = ResponseEntity.ok().build();
+        } else {
+            response = ResponseEntity.internalServerError().build();
+        }
+
+        log.info("Processing incoming PUT request (/api/user/update-password) finished!");
         return response;
     }
 

@@ -67,6 +67,18 @@ public class KeycloakService {
         return username;
     }
 
+    public boolean updateUserPassword(String userId, String newPassword) {
+        ResponseEntity<String> response = null;
+
+        try {
+            response = keycloakApi.updatePassword(userId, newPassword, keycloakApiConfig.getUserRealm(), getAdminBearerToken());
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+
+        return (response != null && response.getStatusCode().is2xxSuccessful()); // user password updated in keycloak
+    }
+
     private String getBearerTokenByPassword(String url, String username, String password, String clientId) {
         ResponseEntity<KeycloakTokenResponse> response = keycloakApi.getBearerTokenByPassword(
                 url, username, password, clientId);

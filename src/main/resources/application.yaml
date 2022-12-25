@@ -23,7 +23,7 @@ logging:
     org:
       hibernate: info
       springframework:
-        security: info
+        security: debug
         web: info
 
 spring-keycloak-poc:

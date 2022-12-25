@@ -27,6 +27,7 @@ public class SpringSecurityConfig {
                 .requestMatchers("/actuator/health").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/user/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/user/register").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/api/user/update-password").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/user").authenticated()
                 .requestMatchers("/api/business/*").authenticated()
                 .anyRequest().denyAll().and()

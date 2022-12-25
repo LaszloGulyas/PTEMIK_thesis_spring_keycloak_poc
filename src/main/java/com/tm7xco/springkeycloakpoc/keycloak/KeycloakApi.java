@@ -103,4 +103,26 @@ public class KeycloakApi {
         return restTemplate.exchange(url, method, request, String.class);
     }
 
+    public ResponseEntity<String> updatePassword(String userId, String newPassword, String realm, String bearerToken) {
+        log.info("Preparing rest-call to Keycloak: updatePassword");
+
+        String url = keycloakApiConfig.getUrl() + "/admin/realms/" + realm + "/users/" + userId + "/reset-password";
+        HttpMethod method = HttpMethod.PUT;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(bearerToken);
+
+        KeycloakUserCredentials credentials = KeycloakUserCredentials.builder()
+                .type("password")
+                .value(newPassword)
+                .temporary(false)
+                .build();
+
+        HttpEntity<KeycloakUserCredentials> request = new HttpEntity<>(credentials, headers);
+
+        log.info("Initiating rest-call to Keycloak: updatePassword");
+        return restTemplate.exchange(url, method, request, String.class);
+    }
+
 }
