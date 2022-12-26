@@ -37,6 +37,8 @@ List of API endpoints:
   - POST /api/user/register
 - secured:
   - GET /api/business/execute
+  - PUT /api/user/update-password
+  - DELETE /api/user
 
 ## How to build / start the project
 - Start project in fully dockerized environment:
