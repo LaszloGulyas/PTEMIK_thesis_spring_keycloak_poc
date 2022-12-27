@@ -1,9 +1,11 @@
 package com.tm7xco.springkeycloakpoc.keycloak;
 
 import com.tm7xco.springkeycloakpoc.config.KeycloakApiConfig;
+import com.tm7xco.springkeycloakpoc.keycloak.dto.KeycloakRealmRoleResponse;
 import com.tm7xco.springkeycloakpoc.keycloak.dto.KeycloakTokenResponse;
 import com.tm7xco.springkeycloakpoc.keycloak.dto.KeycloakUserResponse;
-import com.tm7xco.springkeycloakpoc.keycloak.model.KeycloakUserCredentials;
+import com.tm7xco.springkeycloakpoc.keycloak.model.KeycloakRealmRoleModel;
+import com.tm7xco.springkeycloakpoc.keycloak.model.KeycloakUserCredentialsModel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
@@ -70,7 +72,7 @@ public class KeycloakApi {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(bearerToken);
 
-        KeycloakUserCredentials credentials = KeycloakUserCredentials.builder()
+        KeycloakUserCredentialsModel credentials = KeycloakUserCredentialsModel.builder()
                 .type("password")
                 .value(password)
                 .temporary(false)
@@ -113,15 +115,63 @@ public class KeycloakApi {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(bearerToken);
 
-        KeycloakUserCredentials credentials = KeycloakUserCredentials.builder()
+        KeycloakUserCredentialsModel credentials = KeycloakUserCredentialsModel.builder()
                 .type("password")
                 .value(newPassword)
                 .temporary(false)
                 .build();
 
-        HttpEntity<KeycloakUserCredentials> request = new HttpEntity<>(credentials, headers);
+        HttpEntity<KeycloakUserCredentialsModel> request = new HttpEntity<>(credentials, headers);
 
         log.info("Initiating rest-call to Keycloak: updatePassword");
+        return restTemplate.exchange(url, method, request, String.class);
+    }
+
+    public ResponseEntity<KeycloakRealmRoleResponse> getRealmRoleByName(String roleName, String realm, String bearerToken) {
+        log.info("Preparing rest-call to Keycloak: getRealmRoleByName");
+
+        String url = keycloakApiConfig.getUrl() + "/admin/realms/" + realm + "/roles/" + roleName;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(bearerToken);
+
+        HttpEntity<KeycloakUserCredentialsModel> request = new HttpEntity<>(headers);
+
+        log.info("Initiating rest-call to Keycloak: getRealmRoleByName");
+        return restTemplate.exchange(url, HttpMethod.GET, request, KeycloakRealmRoleResponse.class);
+    }
+
+    public ResponseEntity<String> addRealmRoleToUser(String userId, String roleId, String roleName, String realm, String bearerToken) {
+        return requestRealmRoleOperation(
+                HttpMethod.POST,
+                userId, roleId, roleName, realm, bearerToken);
+    }
+
+    public ResponseEntity<String> deleteRealmRoleFromUser(String userId, String roleId, String roleName, String realm, String bearerToken) {
+        return requestRealmRoleOperation(
+                HttpMethod.DELETE,
+                userId, roleId, roleName, realm, bearerToken);
+    }
+
+    private ResponseEntity<String> requestRealmRoleOperation(HttpMethod method, String userId, String roleId, String roleName, String realm, String bearerToken) {
+        log.info("Preparing rest-call to Keycloak: requestRealmRoleOperation " + method);
+
+        String url = keycloakApiConfig.getUrl() + "/admin/realms/" + realm + "/users/" + userId + "/role-mappings/realm";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(bearerToken);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        KeycloakRealmRoleModel role = KeycloakRealmRoleModel.builder()
+                .id(roleId)
+                .name(roleName)
+                .build();
+
+        List<KeycloakRealmRoleModel> listOfRoles = List.of(role);
+
+        HttpEntity<List<KeycloakRealmRoleModel>> request = new HttpEntity<>(listOfRoles, headers);
+
+        log.info("Initiating rest-call to Keycloak: requestRealmRoleOperation " + method);
         return restTemplate.exchange(url, method, request, String.class);
     }
 

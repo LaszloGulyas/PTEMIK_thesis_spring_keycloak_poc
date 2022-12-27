@@ -7,10 +7,9 @@ import lombok.Getter;
 @Getter
 @Builder
 @JsonSerialize
-public class KeycloakUserCredentials {
+public class KeycloakRealmRoleModel {
 
-    private String type;
-    private String value;
-    private Boolean temporary;
+    private String id;
+    private String name;
 
 }
