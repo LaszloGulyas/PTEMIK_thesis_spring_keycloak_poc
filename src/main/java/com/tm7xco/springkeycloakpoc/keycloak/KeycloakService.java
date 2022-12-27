@@ -4,7 +4,6 @@ import com.tm7xco.springkeycloakpoc.config.KeycloakApiConfig;
 import com.tm7xco.springkeycloakpoc.keycloak.dto.KeycloakRealmRoleResponse;
 import com.tm7xco.springkeycloakpoc.keycloak.dto.KeycloakTokenResponse;
 import com.tm7xco.springkeycloakpoc.keycloak.dto.KeycloakUserResponse;
-import com.tm7xco.springkeycloakpoc.security.UserRole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -81,23 +80,23 @@ public class KeycloakService {
         return (response != null && response.getStatusCode().is2xxSuccessful()); // user password updated in keycloak
     }
 
-    public boolean addRoleToUser(String userId, UserRole role) {
-        return updateRoleOfUser(userId, role, true);
+    public boolean addRoleToUser(String userId, String roleName) {
+        return updateRoleOfUser(userId, roleName, true);
     }
 
-    public boolean revokeRoleFromUser(String userId, UserRole role) {
+    public boolean revokeRoleFromUser(String userId, String role) {
         return updateRoleOfUser(userId, role, false);
     }
 
-    private boolean updateRoleOfUser(String userId, UserRole role, boolean assignment) {
+    private boolean updateRoleOfUser(String userId, String roleName, boolean assignment) {
         ResponseEntity<String> response = null;
 
         try {
             if (assignment) {
-                response = keycloakApi.addRealmRoleToUser(userId, getRealmRoleId(role), role.name(),
+                response = keycloakApi.addRealmRoleToUser(userId, getRealmRoleId(roleName), roleName,
                         keycloakApiConfig.getUserRealm(), getAdminBearerToken());
             } else {
-                response = keycloakApi.deleteRealmRoleFromUser(userId, getRealmRoleId(role), role.name(),
+                response = keycloakApi.deleteRealmRoleFromUser(userId, getRealmRoleId(roleName), roleName,
                         keycloakApiConfig.getUserRealm(), getAdminBearerToken());
             }
         } catch (Exception e) {
@@ -135,9 +134,9 @@ public class KeycloakService {
         return Objects.requireNonNull(response.getBody()).getUsername();
     }
 
-    private String getRealmRoleId(UserRole role) {
+    private String getRealmRoleId(String roleName) {
         ResponseEntity<KeycloakRealmRoleResponse> response = keycloakApi.getRealmRoleByName(
-                role.name(),
+                roleName,
                 keycloakApiConfig.getUserRealm(),
                 getAdminBearerToken());
         return Objects.requireNonNull(response.getBody()).getId();
