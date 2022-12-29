@@ -23,12 +23,12 @@ public class UserController {
         log.info("Processing incoming POST request (/api/user/register) started...");
 
         AppUser registeredUser = userService.registerUser(registration);
-        RegisterResponse response = new RegisterResponse(
-                registeredUser == null ? null : registeredUser.getUsername()
-        );
+
+        RegisterResponse responseBody = new RegisterResponse(registeredUser.getUsername());
+        ResponseEntity<RegisterResponse> response = ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
 
         log.info("Processing incoming POST request (/api/user/register) finished!");
-        return ResponseEntity.ok(response);
+        return response;
     }
 
     @PostMapping("/login")
@@ -36,44 +36,29 @@ public class UserController {
         log.info("Processing incoming POST request (/api/user/login) started...");
 
         LoginResponse response = userService.loginUser(login);
-        HttpStatus responseStatus = response == null ? HttpStatus.UNAUTHORIZED : HttpStatus.OK;
 
         log.info("Processing incoming POST request (/api/user/login) finished!");
-        return ResponseEntity.status(responseStatus).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @DeleteMapping
     public ResponseEntity<Void> deleteUser() {
         log.info("Processing incoming DELETE request (/api/user/) started...");
 
-        boolean isUserDeleted = userService.deleteUser();
-
-        ResponseEntity<Void> response;
-        if (isUserDeleted) {
-            response = ResponseEntity.ok().build();
-        } else {
-            response = ResponseEntity.notFound().build();
-        }
+        userService.deleteUser();
 
         log.info("Processing incoming DELETE request (/api/user/) finished!");
-        return response;
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/update-password")
     public ResponseEntity<Void> updatePassword(@RequestBody UpdatePasswordRequest updatePasswordRequest) {
         log.info("Processing incoming PUT request (/api/user/update-password) started...");
 
-        boolean isPasswordUpdated = userService.updateUserPassword(updatePasswordRequest);
-
-        ResponseEntity<Void> response;
-        if (isPasswordUpdated) {
-            response = ResponseEntity.ok().build();
-        } else {
-            response = ResponseEntity.internalServerError().build();
-        }
+        userService.updateUserPassword(updatePasswordRequest);
 
         log.info("Processing incoming PUT request (/api/user/update-password) finished!");
-        return response;
+        return ResponseEntity.ok().build();
     }
 
 }

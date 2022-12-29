@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Objects;
 
@@ -30,11 +31,31 @@ public class KeycloakService {
                     password,
                     keycloakApiConfig.getUserClientId()
             );
-        } catch (Exception e) {
+        } catch (HttpClientErrorException e) {
             log.error(e.getMessage());
         }
 
         return userBearerToken;
+    }
+
+    public String getUsernameById(String userId) {
+        ResponseEntity<KeycloakUserResponse> response = null;
+
+        try {
+            response = keycloakApi.getUserById(
+                    userId,
+                    keycloakApiConfig.getUserRealm(),
+                    getAdminBearerToken());
+        } catch (HttpClientErrorException e) {
+            log.error(e.getMessage());
+        }
+
+        String username = null;
+        if (response != null && response.getBody() != null) {
+            username = response.getBody().getUsername();
+        }
+
+        return username;
     }
 
     public boolean createKeycloakUser(String username, String password, boolean enabled) {
@@ -47,25 +68,19 @@ public class KeycloakService {
             log.error(e.getMessage());
         }
 
-        return (response != null && response.getStatusCode().is2xxSuccessful()); // user created in keycloak
+        return (response != null && response.getStatusCode().is2xxSuccessful());
     }
 
-    public String deleteKeycloakUser(String userId) {
+    public boolean deleteKeycloakUser(String userId) {
         ResponseEntity<String> response = null;
-        String username = null;
 
         try {
-            username = getUsernameById(userId);
             response = keycloakApi.deleteUser(userId, keycloakApiConfig.getUserRealm(), getAdminBearerToken());
-        } catch (Exception e) {
+        } catch (HttpClientErrorException e) {
             log.error(e.getMessage());
         }
 
-        if (response == null || !response.getStatusCode().is2xxSuccessful()) {
-            username = null;
-        }
-
-        return username;
+        return (response != null && response.getStatusCode().is2xxSuccessful());
     }
 
     public boolean updateUserPassword(String userId, String newPassword) {
@@ -73,11 +88,11 @@ public class KeycloakService {
 
         try {
             response = keycloakApi.updatePassword(userId, newPassword, keycloakApiConfig.getUserRealm(), getAdminBearerToken());
-        } catch (Exception e) {
+        } catch (HttpClientErrorException e) {
             log.error(e.getMessage());
         }
 
-        return (response != null && response.getStatusCode().is2xxSuccessful()); // user password updated in keycloak
+        return (response != null && response.getStatusCode().is2xxSuccessful());
     }
 
     public boolean addRoleToUser(String userId, String roleName) {
@@ -124,14 +139,6 @@ public class KeycloakService {
                 keycloakApiConfig.getAdminUsername(),
                 keycloakApiConfig.getAdminPassword(),
                 keycloakApiConfig.getAdminClientId());
-    }
-
-    private String getUsernameById(String userId) {
-        ResponseEntity<KeycloakUserResponse> response = keycloakApi.getUserById(
-                userId,
-                keycloakApiConfig.getUserRealm(),
-                getAdminBearerToken());
-        return Objects.requireNonNull(response.getBody()).getUsername();
     }
 
     private String getRealmRoleId(String roleName) {

@@ -10,8 +10,10 @@ import com.tm7xco.springkeycloakpoc.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 
 @Service
@@ -25,13 +27,11 @@ public class UserService {
 
     public AppUser registerUser(RegisterRequest registerRequest) {
         if (isUsernameExist(registerRequest.getUsername())) {
-            log.info("User not created: username is already existing!");
-            return null;
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "User not created: username is already existing!");
         }
 
         if (!keycloakService.createKeycloakUser(registerRequest.getUsername(), registerRequest.getPassword(), true)) {
-            log.error("User not created: error during creating user in Keycloak");
-            return null;
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User not created: error during creating user in Keycloak");
         }
 
         log.info("Creating new user started...");
@@ -48,69 +48,52 @@ public class UserService {
 
     public LoginResponse loginUser(LoginRequest loginRequest) {
         log.info("User authentication is started...");
-        LoginResponse loginResponse = null;
 
-        AppUser user = userRepository.findByUsername(loginRequest.getUsername());
-
-        if (user == null) {
-            log.info("Username not existing in database!");
-            return null;
+        if (!isUsernameExist(loginRequest.getUsername())) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Username not existing in database.");
         }
 
-        String token = keycloakService.getUserBearerToken(user.getUsername(), loginRequest.getPassword());
-
-        if (token != null) {
-            loginResponse = new LoginResponse(user.getUsername(), token);
-            log.info("User authenticated successfully!");
-        } else {
-            log.info("User authentication with Keycloak failed!");
+        String token = keycloakService.getUserBearerToken(loginRequest.getUsername(), loginRequest.getPassword());
+        if (token == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Authentication failed.");
         }
 
-        return loginResponse;
+        log.info("User authenticated successfully!");
+        return new LoginResponse(loginRequest.getUsername(), token);
     }
 
-    public boolean deleteUser() {
+    public void deleteUser() {
         log.info("User deletion is started...");
 
         String authenticatedUserId = SecurityContextHolder.getContext().getAuthentication().getName();
-        String deletedUserName = keycloakService.deleteKeycloakUser(authenticatedUserId);
 
-        if (deletedUserName == null) {
-            log.info("User deletion from Keycloak failed!");
-            return false;
+        String usernameToDelete = keycloakService.getUsernameById(authenticatedUserId);
+        if (usernameToDelete == null || !isUsernameExist(usernameToDelete)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Username not existing in database.");
         }
 
-        Integer deletedAppUser = null;
-        try {
-             deletedAppUser = userRepository.deleteAppUserByUsername(deletedUserName);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
-
-        if (deletedAppUser == null) {
-            log.info("User deletion from database failed!");
-            return false;
-        }
-
+        userRepository.deleteAppUserByUsername(usernameToDelete);
+        keycloakService.deleteKeycloakUser(authenticatedUserId);
         log.info("User deleted successfully!");
-        return true;
     }
 
-    public boolean updateUserPassword(UpdatePasswordRequest passwordRequest) {
+    public void updateUserPassword(UpdatePasswordRequest passwordRequest) {
         log.info("Updating user password is started...");
 
         String authenticatedUserId = SecurityContextHolder.getContext().getAuthentication().getName();
-        boolean isUserPasswordUpdated = keycloakService.updateUserPassword(
-                authenticatedUserId,
-                passwordRequest.getPassword());
 
-        if (isUserPasswordUpdated) {
-            log.info("User password updated successfully!");
-        } else {
-            log.info("User password updating failed!");
+        String usernameToUpdatePassword = keycloakService.getUsernameById(authenticatedUserId);
+        if (usernameToUpdatePassword == null || !isUsernameExist(usernameToUpdatePassword)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Username not existing in database.");
         }
 
-        return isUserPasswordUpdated;
+        boolean isUpdated = keycloakService.updateUserPassword(authenticatedUserId, passwordRequest.getPassword());
+
+        if (!isUpdated) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unknown error during password update.");
+        }
+
+        log.info("User password updated successfully!");
     }
 
     private boolean isUsernameExist(String username) {
