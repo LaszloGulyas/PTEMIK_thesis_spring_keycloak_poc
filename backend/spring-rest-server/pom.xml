@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.tm7xco</groupId>
-    <artifactId>spring-keycloak-poc</artifactId>
+    <artifactId>spring-rest-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>spring-keycloak-poc</name>
     <description>spring-keycloak-poc</description>

@@ -43,7 +43,7 @@ services:
     depends_on:
       - postgres
   springapp:
-    build: .
+    build: ./backend/spring-rest-server
     image: spring-keycloak-poc-springapp
     container_name: springapp-0.0.1
     volumes:
