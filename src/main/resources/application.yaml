@@ -11,6 +11,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
+    properties:
+      jakarta:
+        persistence:
+          sharedCache:
+            mode: UNSPECIFIED
+    open-in-view: true
   security:
     oauth2:
       resourceserver:
@@ -23,7 +29,7 @@ logging:
     org:
       hibernate: info
       springframework:
-        security: debug
+        security: info
         web: info
 
 spring-keycloak-poc:
