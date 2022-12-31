@@ -42,25 +42,26 @@ List of API endpoints:
 
 ## How to build / start the project
 - Start project in fully dockerized environment:
-  - ```cd``` to the root project folder
-  - run ```./scripts/build-start-project.sh``` to
-    - clean install project with maven
+  - ```cd``` to the ```/scripts``` folder
+  - run ```./build-start-project.sh``` to
+    - clean install keycloak-rest-client-lib with maven
+    - clean install spring-rest-server with maven
     - remove existing springapp image from docker
     - build springapp docker image
     - start docker containers
-  - run ```./scripts/stop-project.sh``` to
+  - run ```./stop-project.sh``` to
     - stop and remove docker containers
     - keep docker images
     - keep docker volumes
-  - run ```./scripts/purge-project.sh``` to
+  - run ```./purge-project.sh``` to
     - stop and remove docker containers
     - keep docker images
     - remove docker volumes
 - Start project without a containerized springapp to allow local run and debugging:
-  - run ```./scripts/local-start-containers.sh``` to
+  - run ```./local-start-containers.sh``` to
     - start postgres / keycloak containers
     - then run springapp jar manually or from IDE
-  - run ```./scripts/local-stop-containers.sh``` to
+  - run ```./local-stop-containers.sh``` to
     - stop and remove docker containers
     - keep docker images
     - keep docker volumes
