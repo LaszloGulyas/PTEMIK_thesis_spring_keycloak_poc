@@ -32,13 +32,12 @@ logging:
         security: info
         web: info
 
-spring-keycloak-poc:
-  keycloak:
-    url: http://keycloak:8081
-    admin:
-      username: admin
-      password: admin
-      client-id: admin-cli
-    user:
-      client-id: springapp
-      realm: SpringKeycloakPoc
+keycloak-rest-client:
+  url: http://keycloak:8081
+  admin:
+    username: admin
+    password: admin
+    client-id: admin-cli
+  user:
+    client-id: springapp
+    realm: SpringKeycloakPoc

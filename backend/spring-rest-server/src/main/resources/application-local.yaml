@@ -13,6 +13,6 @@ spring:
           issuer-uri: http://localhost:8081/realms/SpringKeycloakPoc
           jwk-set-uri: http://localhost:8081/realms/SpringKeycloakPoc/protocol/openid-connect/certs
 
-spring-keycloak-poc:
-  keycloak:
-    url: http://localhost:8081
+
+keycloak-rest-client:
+  url: http://localhost:8081
