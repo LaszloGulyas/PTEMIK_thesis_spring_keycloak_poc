@@ -1,7 +1,9 @@
 package com.tm7xco.keycloakrestclientlib.autoconfigure;
 
-import com.tm7xco.keycloakrestclientlib.KeycloakApi;
+import com.tm7xco.keycloakrestclientlib.api.KeycloakRestClient;
+import com.tm7xco.keycloakrestclientlib.api.KeycloakRestClient_V19_0_2;
 import com.tm7xco.keycloakrestclientlib.KeycloakService;
+import com.tm7xco.keycloakrestclientlib.KeycloakServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -15,11 +17,11 @@ public class KeycloakRestClientAutoConfiguration {
 
     @Bean
     public KeycloakService createKeycloakService() {
-        return new KeycloakService(createKeycloakApi(), config);
+        return new KeycloakServiceImpl(createKeycloakApi());
     }
 
-    private KeycloakApi createKeycloakApi() {
-        return new KeycloakApi(createRestTemplate(), config);
+    private KeycloakRestClient createKeycloakApi() {
+        return new KeycloakRestClient_V19_0_2(createRestTemplate(), config);
     }
 
     private RestTemplate createRestTemplate() {

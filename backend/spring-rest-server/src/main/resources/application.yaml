@@ -34,10 +34,9 @@ logging:
 
 keycloak-rest-client:
   url: http://keycloak:8081
+  realm: SpringKeycloakPoc
+  client-id: springapp
   admin:
     username: admin
     password: admin
     client-id: admin-cli
-  user:
-    client-id: springapp
-    realm: SpringKeycloakPoc

@@ -10,20 +10,15 @@ import org.springframework.context.annotation.Configuration;
 public class KeycloakRestClientConfigProperties {
 
     private String url;
+    private String realm;
+    private String clientId;
     private Admin admin;
-    private User user;
 
     @Data
     public static class Admin {
         private String clientId;
         private String username;
         private String password;
-    }
-
-    @Data
-    public static class User {
-        private String clientId;
-        private String realm;
     }
 
 }
