@@ -8,6 +8,7 @@ import {DeleteUserComponent} from "./components/delete-user/delete-user.componen
 import {BusinessUserComponent} from "./components/business-user/business-user.component";
 import {BusinessSuperuserComponent} from "./components/business-superuser/business-superuser.component";
 import {BusinessAdminComponent} from "./components/business-admin/business-admin.component";
+import {ErrorComponent} from "./components/error/error.component";
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -18,7 +19,8 @@ const routes: Routes = [
   {path: 'delete-account', component: DeleteUserComponent},
   {path: 'user-page', component: BusinessUserComponent},
   {path: 'superuser-page', component: BusinessSuperuserComponent},
-  {path: 'admin-page', component: BusinessAdminComponent}
+  {path: 'admin-page', component: BusinessAdminComponent},
+  {path: 'error', component: ErrorComponent}
 ];
 
 @NgModule({

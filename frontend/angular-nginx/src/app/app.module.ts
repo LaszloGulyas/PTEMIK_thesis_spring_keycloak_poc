@@ -13,6 +13,8 @@ import { BusinessAdminComponent } from './components/business-admin/business-adm
 import { ErrorComponent } from './components/error/error.component';
 import { UpdatePasswordComponent } from './components/update-password/update-password.component';
 import { DeleteUserComponent } from './components/delete-user/delete-user.component';
+import {ReactiveFormsModule} from "@angular/forms";
+import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -30,7 +32,9 @@ import { DeleteUserComponent } from './components/delete-user/delete-user.compon
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
