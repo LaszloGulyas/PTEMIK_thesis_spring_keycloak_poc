@@ -1,1 +1,14 @@
-<p>delete-user works!</p>
+<div class="container">
+  <div class="frame border">
+    <p class="h4 mb-4 p-3">Delete account</p>
+    <div *ngIf="!isAccountDeleted" class="text-center">
+      <p>ATTENTION! You are about to FINALLY DELETE all your account data!</p>
+      <div class="text-center">
+        <button color="info" block="true" class="btn btn-danger my-4" type="button" (click)="delete()">DELETE</button>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="isAccountDeleted" class="text-center">
+    <p>Account deleted successfully!</p>
+  </div>
+</div>

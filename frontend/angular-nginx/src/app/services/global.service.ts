@@ -25,7 +25,7 @@ export class GlobalService {
     return this.authToken;
   }
 
-  setAuthToken(authToken: string): void {
+  setAuthToken(authToken: string | null): void {
     this.authToken = authToken;
   }
 
