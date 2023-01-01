@@ -1,18 +1,19 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" routerLink="/">AngularApp</a>
-  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+  <a class="navbar-brand p-2" routerLink="/">AngularApp</a>
+  <button class="navbar-toggler m-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-    <div class="navbar-nav">
+    <div class="navbar-nav p-2">
       <a class="nav-item nav-link" routerLink="home">Home</a>
-      <a class="nav-item nav-link" routerLink="register">Register</a>
-      <a class="nav-item nav-link" routerLink="login">Login</a>
-      <a class="nav-item nav-link" routerLink="update-password">Update password</a>
-      <a class="nav-item nav-link" routerLink="delete-account">Delete Account</a>
-      <a class="nav-item nav-link" routerLink="user-page">User page</a>
-      <a class="nav-item nav-link" routerLink="superuser-page">Superuser page</a>
-      <a class="nav-item nav-link" routerLink="admin-page">Admin page</a>
+      <a *ngIf="!globalService.isLoggedIn()" class="nav-item nav-link" routerLink="register">Register</a>
+      <a *ngIf="!globalService.isLoggedIn()" class="nav-item nav-link" routerLink="login">Login</a>
+      <a *ngIf="globalService.isLoggedIn()" class="nav-item nav-link" routerLink="update-password">Update password</a>
+      <a *ngIf="globalService.isLoggedIn()" class="nav-item nav-link" routerLink="delete-account">Delete Account</a>
+      <a *ngIf="globalService.isLoggedIn()" class="nav-item nav-link" routerLink="user-page">User page</a>
+      <a *ngIf="globalService.isLoggedIn()" class="nav-item nav-link" routerLink="superuser-page">Superuser page</a>
+      <a *ngIf="globalService.isLoggedIn()" class="nav-item nav-link" routerLink="admin-page">Admin page</a>
+      <a *ngIf="globalService.isLoggedIn()" class="nav-item nav-link btn border border-1" (click)="logout()">Logout</a>
     </div>
   </div>
 </nav>

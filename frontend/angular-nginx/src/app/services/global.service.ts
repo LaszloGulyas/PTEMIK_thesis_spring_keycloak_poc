@@ -29,4 +29,12 @@ export class GlobalService {
     this.authToken = authToken;
   }
 
+  isLoggedIn(): boolean {
+    return this.authToken != null;
+  }
+
+  logout(): void {
+    this.authToken = null;
+  }
+
 }

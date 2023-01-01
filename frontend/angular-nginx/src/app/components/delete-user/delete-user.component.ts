@@ -21,8 +21,8 @@ export class DeleteUserComponent implements OnInit {
     console.log("Delete account request started...");
 
     this.userService.deleteUser().subscribe(
-      response => {
-        this.globalService.setAuthToken(null);
+      () => {
+        this.globalService.logout();
         this.isAccountDeleted = true;
         console.log("Account deleted successfully!");
       },
