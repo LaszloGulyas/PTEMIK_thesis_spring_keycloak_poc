@@ -5,8 +5,8 @@ import {Injectable} from "@angular/core";
 })
 export class GlobalService {
 
-  errorMessage: string | null;
-  authToken: string | null;
+  private errorMessage: string | null;
+  private authToken: string | null;
 
   constructor() {
     this.errorMessage = null;

@@ -1,5 +1,6 @@
 package com.tm7xco.springrestserver.controller;
 
+import com.tm7xco.springrestserver.controller.dto.BusinessResponse;
 import com.tm7xco.springrestserver.service.BusinessService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,33 +16,33 @@ public class BusinessController {
     private final BusinessService businessService;
 
     @GetMapping("/user/execute")
-    public ResponseEntity<Void> executeUserContent() {
+    public ResponseEntity<BusinessResponse> executeUserContent() {
         log.info("Processing incoming GET request (/api/business/user/execute) started...");
 
-        businessService.restrictedBusinessFunction();
+        BusinessResponse response = businessService.restrictedBusinessFunction();
 
         log.info("Processing incoming GET request (/api/business/user/execute) finished!");
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/super-user/execute")
-    public ResponseEntity<Void> executeSuperUserContent() {
+    public ResponseEntity<BusinessResponse> executeSuperUserContent() {
         log.info("Processing incoming GET request (/api/business/super-user/execute) started...");
 
-        businessService.restrictedBusinessFunction();
+        BusinessResponse response = businessService.restrictedBusinessFunction();
 
         log.info("Processing incoming GET request (/api/business/super-user/execute) finished!");
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/admin/execute")
-    public ResponseEntity<Void> executeAdminContent() {
+    public ResponseEntity<BusinessResponse> executeAdminContent() {
         log.info("Processing incoming GET request (/api/business/admin/execute) started...");
 
-        businessService.restrictedBusinessFunction();
+        BusinessResponse response = businessService.restrictedBusinessFunction();
 
         log.info("Processing incoming GET request (/api/business/admin/execute) finished!");
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(response);
     }
 
 }
