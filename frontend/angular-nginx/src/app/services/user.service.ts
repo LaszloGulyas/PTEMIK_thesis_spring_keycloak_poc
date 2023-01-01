@@ -6,6 +6,7 @@ import {LoginFormDataModel} from "../models/loginFormData.model";
 import {LoginResponseModel} from "../models/loginResponse.model";
 import {RegisterFormDataModel} from "../models/registerFormData.model";
 import {GlobalService} from "./global.service";
+import {UpdatePasswordFormDataModel} from "../models/updatePasswordFormData.model";
 
 const SERVER_URL = environment.baseUrl;
 const BASE_URL = SERVER_URL + '/api/user';
@@ -28,6 +29,10 @@ export class UserService {
 
   deleteUser(): Observable<any> {
     return this.httpClient.delete(BASE_URL, {headers: this.createHeaderWithBearerToken()});
+  }
+
+  updatePassword(updatePasswordFormData: UpdatePasswordFormDataModel): Observable<any> {
+    return this.httpClient.put(BASE_URL + "/update-password", updatePasswordFormData, {headers: this.createHeaderWithBearerToken()});
   }
 
   private createHeaderWithBearerToken() {
