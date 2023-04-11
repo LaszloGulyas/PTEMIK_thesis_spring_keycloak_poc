@@ -6,6 +6,10 @@ volumes:
   springapp-data:
     driver: local
 
+networks:
+  common-network:
+    driver: bridge
+
 services:
   postgres:
     build: docker/postgres/.
@@ -16,6 +20,8 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin
+    networks:
+      - common-network
     ports:
       - "5432:5432"
   keycloak:
@@ -31,15 +37,18 @@ services:
       KC_DB_URL: 'jdbc:postgresql://postgres/keycloak'
       KC_DB_USER: keycloak
       KC_DB_PASSWORD: keycloak
-      KC_HOSTNAME: localhost
+      KC_HOSTNAME: ${KEYCLOAK_HOSTNAME:-localhost}
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
+    networks:
+      - common-network
     ports:
       - "8081:8081"
-    command:
-      - "start-dev"
-      - "--import-realm"
-      - "--http-port=8081"
+    entrypoint: /bin/sh
+    command: >
+      -c "sleep 30
+      && /opt/keycloak/bin/kcadm.sh update realms/master -s sslRequired=NONE --server http://keycloak:8081 --realm master --user $$KEYCLOAK_ADMIN --password $$KEYCLOAK_ADMIN_PASSWORD
+      & /opt/keycloak/bin/kc.sh start-dev --import-realm --http-port=8081"
     depends_on:
       - postgres
   springapp:
@@ -48,8 +57,12 @@ services:
     container_name: springapp-0.0.1
     volumes:
       - springapp-data:/var/lib/springapp/data
+    networks:
+      - common-network
     ports:
       - "8080:8080"
+    expose:
+      - 8080
     depends_on:
       - postgres
       - keycloak
@@ -57,6 +70,8 @@ services:
     build: ./frontend/angular-nginx
     image: spring-keycloak-poc-angularapp
     container_name: angular-1.0
+    networks:
+      - common-network
     ports:
       - "4200:4200"
     depends_on:

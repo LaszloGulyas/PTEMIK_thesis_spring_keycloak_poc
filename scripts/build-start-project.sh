@@ -9,4 +9,4 @@ npm run build --prod
 cd "../.."
 docker image rm spring-keycloak-poc-springapp
 docker image rm spring-keycloak-poc-angularapp
-docker-compose -f docker-compose.yml up -d
+docker compose -f docker-compose.yml up -d

@@ -1,7 +1,7 @@
 server:
   port: 8080
 
-cors-policies: http://localhost:4200, http://angularapp:4200
+cors-policies: http://localhost:4200, http://angularapp:4200, http://46.101.176.240:4200/
 
 spring:
   datasource:
