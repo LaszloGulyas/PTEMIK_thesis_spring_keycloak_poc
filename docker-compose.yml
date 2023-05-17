@@ -46,7 +46,7 @@ services:
       - "8081:8081"
     entrypoint: /bin/sh
     command: >
-      -c "sleep 30
+      -c "sleep 300
       && /opt/keycloak/bin/kcadm.sh update realms/master -s sslRequired=NONE --server http://keycloak:8081 --realm master --user $$KEYCLOAK_ADMIN --password $$KEYCLOAK_ADMIN_PASSWORD
       & /opt/keycloak/bin/kc.sh start-dev --import-realm --http-port=8081"
     depends_on:
