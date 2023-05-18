@@ -18,7 +18,7 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @Slf4j
-public class KeycloakRestClient_V19_0_2 implements KeycloakRestClient {
+public class KeycloakRestClientImpl1902 implements KeycloakRestClient {
 
     private final RestTemplate restTemplate;
     private final KeycloakRestClientConfigProperties keycloakClientConfig;

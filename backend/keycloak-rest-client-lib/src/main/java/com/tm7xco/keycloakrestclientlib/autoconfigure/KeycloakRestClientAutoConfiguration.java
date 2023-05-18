@@ -1,7 +1,7 @@
 package com.tm7xco.keycloakrestclientlib.autoconfigure;
 
 import com.tm7xco.keycloakrestclientlib.api.KeycloakRestClient;
-import com.tm7xco.keycloakrestclientlib.api.KeycloakRestClient_V19_0_2;
+import com.tm7xco.keycloakrestclientlib.api.KeycloakRestClientImpl1902;
 import com.tm7xco.keycloakrestclientlib.KeycloakService;
 import com.tm7xco.keycloakrestclientlib.KeycloakServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class KeycloakRestClientAutoConfiguration {
     }
 
     private KeycloakRestClient createKeycloakApi() {
-        return new KeycloakRestClient_V19_0_2(createRestTemplate(), config);
+        return new KeycloakRestClientImpl1902(createRestTemplate(), config);
     }
 
     private RestTemplate createRestTemplate() {
